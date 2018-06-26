@@ -1,0 +1,315 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <style>
+        input[type=text] {
+    width: 70%;
+    height:35px;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    background-color: white;
+    background-image: url('searchicon.png');
+    background-position: 10px 10px; 
+    background-repeat: no-repeat;
+    padding: 12px 20px 12px 40px;
+}
+    </style>
+    <script src="../New folder (2)/jquery-1.10.2.min.js"></script>
+		   <script type="text/javascript" src="../New folder (2)/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../New folder (2)/datatable.min.css" />
+    <script type="text/javascript" src="../New folder (2)/datables.min.js"></script>
+        
+
+    <!--This script for load a records-->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            
+            var json = {
+                BrowserStats: [
+                 { name: "Test Task #1", date: "2012-12-01", assigned: "John Doe" },
+                 { name: "Test Task #2", date: "2012-12-02", assigned: "John Doe" },
+                 { name: "Test Task #3", date: "2012-12-03", assigned: "John Doe" },
+                 { name: "Test Task #4", date: "2012-12-04", assigned: "John Doe" },
+                 { name: "Test Task #5", date: "2012-12-05", assigned: "John Doe" },
+                 { name: "Test Task #6", date: "2012-12-06", assigned: "John Doe" },
+                 { name: "Test Task #7", date: "2012-12-07", assigned: "John Doe" },
+                ]
+            };
+
+            var data = jQuery.map(json.BrowserStats, function (el, i) {
+                debugger;
+                return [[el.name, el.date, el.assigned]];
+            });
+
+            $('#example').dataTable({
+                stateSave: true,
+                "aaData": data,
+                "bStateSave": true,
+                "paging": false,
+                "aoColumns": [
+                  { "sTitle": "Task Name" },
+                  { "sTitle": "Date" },
+                  { "sTitle": "Assigned To" },
+                ]
+            });
+
+            var $tournament = $('#example');
+            if (localStorage.getItem("#example")) {
+                $tournament.html(localStorage.getItem("#example"));
+            }
+        });
+
+
+    </script>
+
+    <!--This script for add a new records-->
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('#btnsubmit').click(function () {
+                debugger;
+
+                var dTable = $('#example').DataTable();
+
+                var $tournament = $('#example');
+                $tournament.append('<tr><td>' + $('#txttaskname').val() + '</td><td>' + $('#txtdate').val() + '</td>><td>' + $('#txtassigned').val() + '</td></tr>');
+                localStorage.setItem("#example", $tournament.html());
+                dTable.row.add([$('#txttaskname').val(),
+                         $('#txtdate').val(),
+                         $('#txtassigned').val(),
+                ]).draw();
+
+                 $('.form input[type="text"]').val('');
+		$('.form input[type="date"]').val('dd-mm-yyyy');
+            });
+        });
+    </script>
+
+    <!--This script for add a class for selected row-->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var table = $('#example').DataTable();
+
+            $('#example tbody').on('click', 'tr', function () {
+                debugger;
+                if ($(this).hasClass('selected')) {
+                    $(this).removeClass('selected');
+                }
+                else {
+                    table.$('tr.selected').removeClass('selected');
+                    $(this).addClass('selected');
+                }
+            });
+
+        });
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var table = $('#example').dataTable();
+            $('#button').click(function () {
+                debugger;
+
+                var rows = table.find('.selected').html();
+                var existrow = '<tr>' + rows + '</tr>';
+                if (localStorage)
+                    {
+                    var text1 = localStorage.getItem('#example');
+                    var data = text1.replace(existrow, '');
+                    localStorage.removeItem('example');
+                    localStorage.setItem('#example', data);
+
+                    alert('Please Load a Page')
+
+                }
+
+                //localStorage.clear();
+            });
+        });
+    </script>
+
+    <!--This script for validation-->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#btnsubmit').click(function () {
+                if ($('#txttaskname').val() == '') {
+                    $('.clsname').show();
+                }
+                if ($('#txtdate').val() == '') {
+                    $('.clsdate').show();
+                }
+                if ($('#txtassigned').val() == '') {
+                    $('.alertassign').show();
+                }
+            });
+        });
+    </script>
+
+
+    <style>
+
+	[type="date"] {
+  background:#fff url("../New folder (2)/calendar_2.png")  97% 50% no-repeat ;
+}
+[type="date"]::-webkit-inner-spin-button {
+  display: none;
+}
+[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 0;
+}
+
+/* custom styles */
+body {
+  padding: 4em;
+  background: #e5e5e5;
+  font: 13px/1.4 Geneva, 'Lucida Sans', 'Lucida Grande', 'Lucida Sans Unicode', Verdana, sans-serif;
+}
+label {
+  display: block;
+}
+input {
+  border: 1px solid #c4c4c4;
+  border-radius: 5px;
+  background-color: #fff;
+  padding: 3px 5px;
+  box-shadow: inset 0 3px 6px rgba(0,0,0,0.1);
+  width: 190px;
+}		
+
+
+        .dataTables_info, .dataTables_filter {
+            display: none;
+        }
+
+        /*.selected
+        {
+            display:none;
+        }*/
+       
+
+        #example_wrapper {
+            width: 50%;
+            display: inline-block;
+        }
+
+        #btnsubmit {
+                height: 36px;
+    width: 100px;
+    margin-top: 16px;
+    background-color: dimgrey;
+    color: white;
+    border-radius: 7px;
+        }
+
+        table.dataTable thead .sorting {
+            background-image: none;
+        }
+
+        table.dataTable thead .sorting_asc {
+            background-image: none;
+        }
+        #main {
+            margin-left: 25%;
+            margin-top: 6%;
+            position:absolute;
+            border:8px solid #dcdcdc;
+            width:625px;
+            /* margin: 0 auto;*/
+             height:430px;
+             box-shadow: 0px 20px #dcdcdc;
+        }
+       #d1{
+  width: 300px;
+    height: 332px;
+    float: left;
+    border-right: 4px solid lightgrey;
+   
+
+}
+
+       #d2{
+
+  border: 2px solid lightgrey;
+    padding-left: 0px;
+    width: 306px;
+    height: 218px;
+    margin-left: 195px;
+    max-height: 282px;
+    overflow: auto;
+    margin-top: 12px;
+}
+
+    </style>
+
+</head>
+<body>
+    <div  id="main">
+        <div style="background-color: #c5c5c5;margin-top: -1px;height: 100px;">
+ <br/>
+            
+            <h2  style="margin-left:40px;">Task Tracker</h2>
+            
+            <p
+                style="margin-top:-25px;
+                margin-left:40px;color:#585858">v2.0
+            </p>
+        </div>
+        <div id="d1" style="width 40%; float left;">
+            <table style="margin 100px 100px; height 250px;margin-left:50px;" class="form">
+                <tr>
+                    <td style="padding-bottom: 10px;padding-top: 7px;">
+                      <b> Create a Task</b> 
+                    </td>
+                </tr>
+                <tr>
+                    <td><b style="font-size:14px;">TaskName</b></td>
+                   
+                </tr>
+
+                <tr>
+                    <td>
+                        <input type="text" id="txttaskname" /><br />
+                        <span class="clsname" style="color:red;font-size:12px;display:none;">Please Enter Task Name</span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><b style="font-size:14px;">Date</b></td>
+                    </tr>
+                <tr>
+                    <td>
+			<input type="date" name="dateofbirth" id="txtdate">
+                        <br />
+                        <span class="clsdate" style="color: red; font-size: 12px; display: none; ">Please Select Date</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td><b style="font-size:14px;">Assigned To</b></td>
+                    
+                        </tr>
+                <tr>
+                    <td>
+                        <input type="text" id="txtassigned" /><br />
+                        <span class="alertassign" style="color: red; font-size: 12px; display: none; ">Please Enter AssignedTo</span>
+                    </td>
+                </tr>
+               
+                <tr>
+                    <td>
+                        <input type="button" value="Submit" id="btnsubmit" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div>
+            <input style="margin-top: 4px;margin-left: 10px;" type="button" value="Delete selected row" id="button">
+        </div>
+        <div id="d2">
+        <table id="example" class="display"  cellspacing="0" width="100%"></table>
+
+    </div>
+</body>
+</html>
